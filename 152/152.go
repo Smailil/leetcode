@@ -26,10 +26,11 @@ func maxProduct(nums []int) int {
     res := nums[0]
     curMin, curMax := 1, 1
     for _, num := range nums {
-		if num == 0 {
-			curMax, curMin = 1, 1
-			continue
-		}
+        if num == 0 {
+            curMax, curMin = 1, 1
+            res = max(res, 0) // учитываем нулевое произведение
+            continue
+        }
         tmp := curMax * num
         curMax = max(num*curMax, num*curMin, num)
         curMin = min(tmp, num*curMin, num)
