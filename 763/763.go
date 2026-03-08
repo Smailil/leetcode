@@ -29,27 +29,26 @@ func partitionLabels(s string) []int {
         return []int{}
     }
 
-    // 1. Находим последнее вхождение каждого символа
-    lastIndex := make([]int, 26) // Оптимизация: array вместо map для lowercase letters
-    for i := range len(s) {
+    lastIndex := make([]int, 26)
+    for i := 0; i < len(s); i++ {
         lastIndex[s[i]-'a'] = i
     }
 
-    // 2. Предварительно выделяем память для результата
-    res := make([]int, 0, len(s)/2+1)
+    res := make([]int, 0)
     currentLen, partitionEnd := 0, 0
 
-    // 3. Проходим по строке и определяем границы разделов
-    for i := range len(s) {
+    for i := 0; i < len(s); i++ {
         currentLen++
-        charIdx := s[i] - 'a'
         
-        // Расширяем границу раздела до последнего вхождения текущего символа
-        if lastIndex[charIdx] > partitionEnd {
-            partitionEnd = lastIndex[charIdx]
+        if lastIndex[s[i]-'a'] > partitionEnd {
+            partitionEnd = lastIndex[s[i]-'a']
         }
 
-        // Достигли конца текущего раздела
+        if partitionEnd == len(s)-1 {
+            res = append(res, currentLen + (partitionEnd - i))
+            break
+        }
+
         if i == partitionEnd {
             res = append(res, currentLen)
             currentLen = 0
