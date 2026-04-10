@@ -49,7 +49,7 @@ point.length == 2
 
 */
 
-type CountSquares struct {
+type DetectSquares struct {
     ptsCount map[Point]int
 }
 
@@ -57,16 +57,16 @@ type Point struct {
     x, y int
 }
 
-func Constructor() CountSquares {
-    return CountSquares{ptsCount: make(map[Point]int)}
+func Constructor() DetectSquares {
+    return DetectSquares{ptsCount: make(map[Point]int)}
 }
 
-func (this *CountSquares) Add(point []int) {
+func (this *DetectSquares) Add(point []int) {
     p := Point{point[0], point[1]}
     this.ptsCount[p]++
 }
 
-func (this *CountSquares) Count(point []int) int {
+func (this *DetectSquares) Count(point []int) int {
     res := 0
     px, py := point[0], point[1]
 
