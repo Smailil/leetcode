@@ -1,40 +1,40 @@
 package main
 
 /*
-Design a HashMap without using any built-in hash table libraries.
+Спроектируйте HashMap без использования встроенных библиотек хеш-таблиц.
 
-Implement the MyHashMap class:
+Реализуйте класс MyHashMap:
 
-MyHashMap() initializes the object with an empty map.
-void put(int key, int value) inserts a (key, value) pair into the HashMap. If the key already exists in the map, update the corresponding value.
-int get(int key) returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key.
-void remove(key) removes the key and its corresponding value if the map contains the mapping for the key.
- 
+MyHashMap() инициализирует объект с пустой картой.
+void put(int key, int value) вставляет пару (ключ, значение) в HashMap.
+    Если ключ уже существует, обновляет соответствующее значение.
+int get(int key) возвращает значение, с которым сопоставлен указанный ключ,
+    или -1, если карта не содержит сопоставления для этого ключа.
+void remove(key) удаляет ключ и его значение, если карта содержит это сопоставление.
 
-Example 1:
+Пример 1:
 
-Input
+Вход
 ["MyHashMap", "put", "put", "get", "get", "put", "get", "remove", "get"]
 [[], [1, 1], [2, 2], [1], [3], [2, 1], [2], [2], [2]]
-Output
+Выход
 [null, null, null, 1, -1, null, 1, null, -1]
 
-Explanation
+Пояснение
 MyHashMap myHashMap = new MyHashMap();
-myHashMap.put(1, 1); // The map is now [[1,1]]
-myHashMap.put(2, 2); // The map is now [[1,1], [2,2]]
-myHashMap.get(1);    // return 1, The map is now [[1,1], [2,2]]
-myHashMap.get(3);    // return -1 (i.e., not found), The map is now [[1,1], [2,2]]
-myHashMap.put(2, 1); // The map is now [[1,1], [2,1]] (i.e., update the existing value)
-myHashMap.get(2);    // return 1, The map is now [[1,1], [2,1]]
-myHashMap.remove(2); // remove the mapping for 2, The map is now [[1,1]]
-myHashMap.get(2);    // return -1 (i.e., not found), The map is now [[1,1]]
- 
+myHashMap.put(1, 1); // Карта теперь [[1,1]]
+myHashMap.put(2, 2); // Карта теперь [[1,1], [2,2]]
+myHashMap.get(1);    // возвращает 1, карта [[1,1], [2,2]]
+myHashMap.get(3);    // возвращает -1 (не найдено), карта [[1,1], [2,2]]
+myHashMap.put(2, 1); // Карта теперь [[1,1], [2,1]] (обновляет существующее значение)
+myHashMap.get(2);    // возвращает 1, карта [[1,1], [2,1]]
+myHashMap.remove(2); // удаляет сопоставление для 2, карта теперь [[1,1]]
+myHashMap.get(2);    // возвращает -1 (не найдено), карта [[1,1]]
 
-Constraints:
+Ограничения:
 
-0 <= key, value <= 106
-At most 104 calls will be made to put, get, and remove.
+0 <= key, value <= 10^6
+Не более 10^4 вызовов put, get и remove.
 
 */
 
