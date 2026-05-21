@@ -51,26 +51,26 @@ myCircularQueue.Rear();     // вернуть 4
 Суммарно не более 3000 вызовов enQueue, deQueue, Front, Rear, isEmpty и isFull.
 
 */
-// ListNode представляет узел двусвязного списка.
-type ListNode struct {
+// MyListNode представляет узел двусвязного списка.
+type MyListNode struct {
     val  int       // Значение, хранящееся в узле
-    next *ListNode // Указатель на следующий узел
-    prev *ListNode // Указатель на предыдущий узел
+    next *MyListNode // Указатель на следующий узел
+    prev *MyListNode // Указатель на предыдущий узел
 }
 
 // MyCircularQueue реализует кольцевую очередь на базе двусвязного списка.
 // Использование фиктивных (sentinel) узлов left и right упрощает граничные условия вставки/удаления.
 type MyCircularQueue struct {
     space int       // Количество свободных мест в очереди
-    left  *ListNode // Фиктивный узел-голова (перед ним элементов нет)
-    right *ListNode // Фиктивный узел-хвост (после него элементов нет)
+    left  *MyListNode // Фиктивный узел-голова (перед ним элементов нет)
+    right *MyListNode // Фиктивный узел-хвост (после него элементов нет)
 }
 
 // Constructor инициализирует очередь с максимальной вместимостью k.
 func Constructor(k int) MyCircularQueue {
     // Создаём два фиктивных узла и связываем их между собой
-    left := &ListNode{val: 0}
-    right := &ListNode{val: 0, prev: left}
+    left := &MyListNode{val: 0}
+    right := &MyListNode{val: 0, prev: left}
     left.next = right
 
     return MyCircularQueue{
@@ -88,7 +88,7 @@ func (this *MyCircularQueue) EnQueue(value int) bool {
     }
 
     // Создаём новый узел и вставляем его перед right-ограничителем
-    cur := &ListNode{val: value, next: this.right, prev: this.right.prev}
+    cur := &MyListNode{val: value, next: this.right, prev: this.right.prev}
     // Обновляем указатели соседей для включения нового узла в список
     this.right.prev.next = cur
     this.right.prev = cur
