@@ -1,72 +1,78 @@
 package main
 
 /*
-Given a circular integer array nums of length n, return the maximum possible sum of a non-empty subarray of nums.
+Дан кольцевой целочисленный массив nums длины n.
+Верните максимально возможную сумму непустого подмассива nums.
 
-A circular array means the end of the array connects to the beginning of the array. Formally, the next element of nums[i] is nums[(i + 1) % n] and the previous element of nums[i] is nums[(i - 1 + n) % n].
+Кольцевой массив означает, что конец массива соединяется с началом массива.
+Формально следующий элемент после nums[i] - это nums[(i + 1) % n],
+а предыдущий элемент перед nums[i] - это nums[(i - 1 + n) % n].
 
-A subarray may only include each element of the fixed buffer nums at most once. Formally, for a subarray nums[i], nums[i + 1], ..., nums[j], there does not exist i <= k1, k2 <= j with k1 % n == k2 % n.
+Подмассив может включать каждый элемент фиксированного массива nums
+не более одного раза.
+Формально для подмассива nums[i], nums[i + 1], ..., nums[j]
+не существует таких i <= k1, k2 <= j,
+что k1 % n == k2 % n.
 
- 
+Пример 1:
+Вход: nums = [1,-2,3,-2]
+Выход: 3
+Пояснение: подмассив [3] имеет максимальную сумму 3.
 
-Example 1:
+Пример 2:
+Вход: nums = [5,-3,5]
+Выход: 10
+Пояснение: подмассив [5,5] имеет максимальную сумму 5 + 5 = 10.
 
-Input: nums = [1,-2,3,-2]
-Output: 3
-Explanation: Subarray [3] has maximum sum 3.
-Example 2:
+Пример 3:
+Вход: nums = [-3,-2,-3]
+Выход: -2
+Пояснение: подмассив [-2] имеет максимальную сумму -2.
 
-Input: nums = [5,-3,5]
-Output: 10
-Explanation: Subarray [5,5] has maximum sum 5 + 5 = 10.
-Example 3:
-
-Input: nums = [-3,-2,-3]
-Output: -2
-Explanation: Subarray [-2] has maximum sum -2.
- 
-
-Constraints:
-
+Ограничения:
 n == nums.length
-1 <= n <= 3 * 104
--3 * 104 <= nums[i] <= 3 * 104
+1 <= n <= 3 * 10^4
+-3 * 10^4 <= nums[i] <= 3 * 10^4
 
 */
 
-func lemonadeChange(bills []int) bool {
-    // Считаем количество купюр по $5 и $10, которые есть в кассе для сдачи.
-    // Купюры по $20 для сдачи не нужны, поэтому их не считаем.
-    five, ten := 0, 0
+func maxSubarraySumCircular(nums []int) int {
+    // globMax и globMin хранят итоговые суммы максимального и минимального подмассивов.
+    // Инициализируем их первым элементом массива.
+    globMax, globMin := nums[0], nums[0]
+    
+    // curMax и curMin — текущие промежуточные суммы (используются в алгоритме Кадане).
+    // total — сумма всех элементов массива.
+    curMax, curMin, total := 0, 0, 0
 
-    for _, b := range bills {
-        switch b {
-		case 5:
-            // Покупатель платит $5 — сдачи не требуется, просто кладём купюру в кассу
-            five++
-        case 10:
-            // Покупатель платит $10 — нужно дать сдачу $5
-            ten++
-            if five > 0 {
-                five-- // Отдаём одну пятёрку
-            } else {
-                return false // Пятёрок в кассе нет — дать сдачу невозможно
-            }
-        default:
-            // Покупатель платит $20 — нужно дать сдачу $15
-            // Приоритет: сначала отдаём $10 + $5 (крупные купюры менее универсальны)
-            if five > 0 && ten > 0 {
-                five--
-                ten--
-            } else if five >= 3 {
-                // Альтернатива: три пятёрки
-                five -= 3
-            } else {
-                return false // Не хватает купюр для сдачи $15
-            }
-        }
+    for _, num := range nums {
+        // Обновляем текущий максимум: либо продлеваем предыдущий подмассив, 
+        // либо начинаем новый с текущего числа (классический алгоритм Кадане).
+        curMax = max(curMax+num, num)
+        
+        // Обновляем текущий минимум по тому же принципу.
+        curMin = min(curMin+num, num)
+        
+        // Суммируем все элементы массива.
+        total += num
+        
+        // Обновляем глобальные рекорды.
+        globMax = max(globMax, curMax)
+        globMin = min(globMin, curMin)
     }
 
-    // Все покупатели получили сдачу
-    return true
+    // Если globMax <= 0, это означает, что ВСЕ числа в массиве отрицательные.
+    // В таком случае total - globMin даст 0 (так как globMin будет равен total), 
+    // что означало бы пустой подмассив, а по условию подмассив должен быть непустым.
+    // Поэтому просто возвращаем globMax (наименьший по модулю отрицательный элемент).
+    if globMax > 0 {
+        // Если в массиве есть хотя бы одно положительное число, максимальный подмассив может быть:
+        // 1. Обычным непрерывным (globMax).
+        // 2. "Зацикленным" (переходящим с конца массива в начало).
+        //    Сумма такого зацикленного подмассива равна: 
+        //    [Сумма всех элементов] - [Минимальный непрерывный подмассив в середине].
+        return max(globMax, total-globMin)
+    }
+    
+    return globMax
 }
