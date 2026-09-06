@@ -45,10 +45,7 @@ func specialArray(nums []int) int {
     for _, num := range nums {
         // Для любого допустимого x значения больше n эквивалентны n:
         // каждое из них в любом случае не меньше x.
-        index := num
-        if index > len(nums) {
-            index = len(nums)
-        }
+        index := min(num, len(nums))
         count[index]++
     }
 
