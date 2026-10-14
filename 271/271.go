@@ -10,22 +10,27 @@ import (
 Затем закодированная строка декодируется обратно в исходный список строк.
 
 Пример 1:
-Input: ["neet","code","love","you"]
-Output:["neet","code","love","you"]
+Вход: ["neet","code","love","you"]
+Выход: ["neet","code","love","you"]
 
 Пример 2:
-Input: ["we","say",":","yes"]
-Output: ["we","say",":","yes"]
+Вход: ["we","say",":","yes"]
+Выход: ["we","say",":","yes"]
 
 Ограничения:
 0 <= strs.length < 100
 0 <= strs[i].length < 200
 strs[i] содержит только символы UTF-8.
-
 */
 
 type Solution struct{}
 
+// Encode пишет каждую строку как «число байтов:данные» и соединяет записи.
+// Двоеточие в данных допустимо: Decode читает их по указанной длине.
+// Время O(k*L) в худшем случае, k=len(strs), L — длина закодированной строки:
+// res += ... повторно копирует накопленный префикс.
+// Рабочая память O(L) для временных строк; память результата O(L).
+// strs и объект s не изменяются; len(str) считает байты UTF-8, не символы.
 func (s *Solution) Encode(strs []string) string {
 	res := ""
 	for _, str := range strs {
@@ -34,24 +39,35 @@ func (s *Solution) Encode(strs []string) string {
 	return res
 }
 
+// Decode восстанавливает список из корректного результата Encode.
+// Время O(k+H), k — число записей, H — суммарная длина их числовых заголовков.
+// Рабочая память O(1); результат O(k+L), L=len(encoded): срезы удерживают
+// весь общий буфер encoded без копирования данных каждой строки.
+// Вход и s не меняются. Повреждённый формат не проверяется и может дать панику.
 func (s *Solution) Decode(encoded string) []string {
 	var result []string
 	i := 0
 	for i < len(encoded) {
+		// i указывает на начало заголовка; в корректном формате ":" существует.
 		j := i
 		for encoded[j] != ':' {
 			j++
 		}
 		
 		lengthStr := encoded[i:j]
+		// Encode записывает десятичный len в пределах int; для верного входа
+		// преобразование успешно. Ошибка Atoi здесь исходно игнорируется.
 		length, _ := strconv.Atoi(lengthStr)
 		
+		// Заголовок завершён; читаем ровно length байтов, включая любые ":".
+		// При корректном Encode end не выходит за границы encoded.
 		start := j + 1
 		end := start + length
 		str := encoded[start:end]
 		
 		result = append(result, str)
 		
+		// Следующий заголовок начинается после данных, а не после их ":".
 		i = end
 	}
 	return result

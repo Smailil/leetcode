@@ -5,22 +5,21 @@ package main
 
 Пример 1:
 https://assets.leetcode.com/uploads/2021/03/14/invert1-tree.jpg
-Input: root = [4,2,7,1,3,6,9]
-Output: [4,7,2,9,6,3,1]
+Вход: root = [4,2,7,1,3,6,9]
+Выход: [4,7,2,9,6,3,1]
 
 Пример 2:
 https://assets.leetcode.com/uploads/2021/03/14/invert2-tree.jpg
-Input: root = [2,1,3]
-Output: [2,3,1]
+Вход: root = [2,1,3]
+Выход: [2,3,1]
 
 Пример 3:
-Input: root = []
-Output: []
+Вход: root = []
+Выход: []
 
 Ограничения:
 Количество узлов в дереве находится в диапазоне [0, 100].
 -100 <= Node.val <= 100
-
 */
 
 type TreeNode struct {
@@ -29,9 +28,18 @@ type TreeNode struct {
     Right *TreeNode
 }
 
+// invertTree зеркально меняет детей каждого узла рекурсивным обходом.
+// Время O(n), n — число узлов; рабочая память O(h) для стека,
+// h — высота дерева. Возвращаемый указатель O(1), новых узлов нет.
+// Исходное дерево изменяется на месте.
 func invertTree(root *TreeNode) *TreeNode {
+	// nil — пустое поддерево: обращений к его полям не будет.
 	if root != nil {
+    	// Одновременное присваивание читает оба прежних указателя,
+    	// поэтому при обмене ни одна ветвь не теряется.
     	root.Left, root.Right = root.Right, root.Left
+		// После обмена посещаем обе теперь переставленные ветви:
+		// каждый узел дерева всё равно обрабатывается ровно один раз.
 		invertTree(root.Left)
 		invertTree(root.Right)
 	}

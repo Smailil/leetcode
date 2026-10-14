@@ -1,23 +1,27 @@
 package main
 
 /*
-Спроектируйте структуру данных, которая соответствует ограничениям кэша наименее недавно используемого (LRU).
+Спроектируйте структуру данных для кэша LRU:
+при вытеснении удаляется ключ, который дольше всего не использовался.
 
 Реализуйте класс LRUCache:
-LRUCache(int емкость) Инициализировать кэш LRU с емкостью положительного размера.
-int get(int key) Возвращает значение ключа, если ключ существует, в противном случае возвращает -1.
-void put(int key, int value) Обновить значение ключа, если ключ существует.
-В противном случае добавьте пару ключ-значение в кеш. Если количество ключей превышает емкость этой операции, удалите ключ, который использовался реже всего.
-Каждая из функций get и put должна выполняться со средней временной сложностью O(1).
+LRUCache(int capacity) инициализирует кэш LRU с положительной ёмкостью.
+int get(int key) возвращает значение ключа, если он существует,
+иначе возвращает -1.
+void put(int key, int value) обновляет значение существующего ключа.
+В противном случае добавьте пару ключ-значение в кэш.
+Если после операции число ключей превышает ёмкость,
+удалите ключ, который дольше всего не использовался.
+Каждая функция get и put должна работать за O(1) в среднем.
 
 Пример 1:
-Input
+Вход:
 ["LRUCache", "put", "put", "get", "put", "get", "put", "get", "get", "get"]
 [[2], [1, 1], [2, 2], [1], [3, 3], [2], [4, 4], [1], [3], [4]]
-Output
+Выход:
 [null, null, null, 1, null, -1, null, -1, 3, 4]
-Объяснение
-LRUCache lRUCache = новый LRUCache(2);
+Пояснение:
+LRUCache lRUCache = new LRUCache(2);
 lRUCache.put(1, 1); //кэш равен {1=1}
 lRUCache.put(2, 2); //кэш равен {1=1, 2=2}
 lRUCache.get(1);    //возвращаем 1
@@ -33,7 +37,6 @@ lRUCache.get(4);    //возвращаем 4
 0 <= key <= 10^4
 0 <= value <= 10^5
 Для получения и размещения будет совершено максимум 2*10^5 вызовов.
-
 */
 
 type node struct {
@@ -51,6 +54,10 @@ type LRUCache struct {
 }
 
 
+// Constructor создаёт пустой LRU с двумя сторожевыми узлами.
+// Время O(1), начальная память O(1): capacity не выделяется заранее.
+// Хранимый кэш затем занимает O(C), где C=capacity; возвращаемый объект O(1).
+// Все настоящие узлы лежат между left и right: слева LRU, справа MRU.
 func Constructor(capacity int) LRUCache {
     cache := make(map[int]*node, 0)
 	left, right := &node{}, &node{}
@@ -58,13 +65,17 @@ func Constructor(capacity int) LRUCache {
 	left.next, right.prev = right, left
 	return LRUCache{capacity, cache, left, right}
 }
-// удалить из списка
+// remove исключает настоящий узел из двусвязного списка за O(1) времени.
+// Дополнительная память O(1); меняет связи соседей, но не map и не поля node.
+// Предусловие: node уже в списке, его prev/next не nil; sentinels не удаляем.
 func (this *LRUCache) remove(node *node) {
 	prev, next := node.prev, node.next
 	prev.next = next
 	next.prev = prev
 }
-// вставить узел справа
+// insert добавляет отсоединённый узел перед right, на позицию MRU.
+// Время O(1), дополнительная память O(1); меняет список и ссылки node.
+// right.prev существует даже у пустого кэша: тогда это left.
 func (this *LRUCache) insert(node *node) {
 	prev, right := this.right.prev, this.right
 	prev.next, right.prev = node, node
@@ -72,8 +83,12 @@ func (this *LRUCache) insert(node *node) {
 	node.next = right
 }
 
+// Get возвращает значение и делает найденный ключ самым недавним.
+// Среднее время O(1) для int-ключа map, дополнительная память O(1).
+// Меняет порядок списка, но не число ключей и не их значения.
 func (this *LRUCache) Get(key int) int {
     if node, ok := this.cache[key]; ok {
+		// Переставляем тот же узел в MRU; map продолжает ссылаться на него.
 		this.remove(node)
 		this.insert(node)
 		return node.val
@@ -81,12 +96,20 @@ func (this *LRUCache) Get(key int) int {
 	return -1
 }
 
+// Put записывает значение, обновляет MRU и при переполнении удаляет LRU.
+// Среднее амортизированное время O(1), рабочая память операции O(1),
+// хранимые map/список O(C), где C=this.capacity; отдельного результата нет.
+// Меняет значения, состав и порядок кэша. Даже обновление создаёт новый node.
 func (this *LRUCache) Put(key int, value int) {
+    // Старый узел ключа удаляем из списка до замены map-ссылки.
+    // Иначе в списке осталось бы две записи одного ключа.
     if node, ok := this.cache[key]; ok {
 		this.remove(node)
 	}
 	this.cache[key] = &node{key: key, val: value}
 	this.insert(this.cache[key])
+	// Временно возможны C+1 ключей. При положительном C удаляем настоящий
+	// left.next; удаление и из списка, и из map восстанавливает их соответствие.
 	if len(this.cache) > this.capacity {
 		lru := this.left.next
 		this.remove(lru)

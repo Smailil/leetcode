@@ -25,7 +25,6 @@ result[2] = |5-2| + |5-3| + |5-5| = 3 + 2 + 0 = 5.
 Ограничения:
 2 <= nums.length <= 10^5
 1 <= nums[i] <= nums[i + 1] <= 10^4
-
 */
 
 // getSumAbsoluteDifferences возвращает суммы модулей разностей
@@ -58,11 +57,13 @@ func getSumAbsoluteDifferences(nums []int) []int {
         // Индекс i безопасен: range n даёт 0..n-1, а n = len(nums).
         totalSum -= nums[i]
         // Слева i элементов, каждый <= nums[i], поэтому модуль снимается
-        // как nums[i] - nums[j]. Складывая эти разности, получаем
+        // как nums[i] - nums[j].
+        // Складывая эти разности, получаем
         // i*nums[i] - sum(nums[:i]) = i*nums[i] - prefixSum.
         leftSum := i*nums[i] - prefixSum
         // Справа n-i-1 элементов, каждый >= nums[i], поэтому разность
-        // равна nums[j] - nums[i]. Их сумма — сумма правой группы минус
+        // равна nums[j] - nums[i].
+        // Их сумма — сумма правой группы минус
         // n-i-1 копий nums[i]: totalSum - (n-i-1)*nums[i].
         rightSum := totalSum - (n-i-1)*nums[i]
         // Например, nums = [2,3,5], i = 1: prefixSum = 2, totalSum = 5.

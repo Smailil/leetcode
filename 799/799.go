@@ -47,7 +47,6 @@ https://s3-lc-upload.s3.amazonaws.com/uploads/2018/03/09/tower.png
 Ограничения:
 0 <= poured <= 10^9
 0 <= query_glass <= query_row < 100
-
 */
 
 // champagneTower возвращает долю заполнения бокала (query_row, query_glass).
@@ -71,7 +70,8 @@ func champagneTower(poured int, query_row int, query_glass int) float64 {
         // Оба нижних соседа i и i+1 помещаются в curRow длины row+1.
         for i := range row {
             // Бокал вмещает 1 чашку, поэтому возможный перелив равен
-            // prevRow[i] - 1. При extra <= 0 ничего вниз не передаётся.
+            // prevRow[i] - 1.
+            // При extra <= 0 ничего вниз не передаётся.
             extra := prevRow[i] - 1
             if extra > 0 {
                 // Перелив делится поровну между левым и правым нижним соседом.

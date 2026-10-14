@@ -36,7 +36,6 @@ package main
 0 <= nums[i] <= 10^9
 0 <= sum(nums[i]) <= 2^31 - 1
 1 <= k <= 2^31 - 1
-
 */
 
 // checkSubarraySum проверяет, есть ли в nums подмассив длины от 2,

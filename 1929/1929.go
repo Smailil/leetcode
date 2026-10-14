@@ -3,7 +3,8 @@ package main
 /*
 Дан целочисленный массив nums длиной n.
 Необходимо создать массив ans длиной 2n,
-где ans[i] == nums[i] и ans[i + n] == nums[i] для 0 <= i < n (индексация с нуля).
+где ans[i] == nums[i] и ans[i + n] == nums[i] для 0 <= i < n
+(индексация с нуля).
 Иными словами, ans — это конкатенация двух массивов nums.
 Верните массив ans.
 
@@ -25,14 +26,18 @@ package main
 n == nums.length
 1 <= n <= 1000
 1 <= nums[i] <= 1000
-
 */
 
+// getConcatenation записывает каждый элемент в обе половины нового массива.
+// Время O(n), n=len(nums); рабочая память O(1), результат O(n).
+// Исходный nums не меняется, результат имеет отдельный backing-массив.
 func getConcatenation(nums []int) []int {
     n := len(nums)
+    // По условию 2*n<=2000; сразу выделяем обе половины.
     ans := make([]int, 2*n)
     for i, num := range nums {
         ans[i] = num
+        // i в0..n-1, поэтому i+n в n..2*n-1 — безопасный индекс второй копии.
         ans[i+n] = num
     }
     return ans

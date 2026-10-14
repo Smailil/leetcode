@@ -4,7 +4,6 @@ import "math/rand"
 
 /*
 Реализуйте класс RandomizedSet:
-
 RandomizedSet() инициализирует объект RandomizedSet.
 bool insert(int val) добавляет val в множество, если его там нет.
 Возвращает true, если val отсутствовал, и false в противном случае.
@@ -17,7 +16,8 @@ int getRandom() возвращает случайный элемент теку�
 
 Пример 1:
 Вход:
-["RandomizedSet", "insert", "remove", "insert", "getRandom", "remove", "insert", "getRandom"]
+["RandomizedSet", "insert", "remove", "insert", "getRandom",
+ "remove", "insert", "getRandom"]
 [[], [1], [2], [2], [], [1], [2], []]
 Выход:
 [null, true, false, true, 2, true, false, 2]
@@ -37,7 +37,6 @@ randomizedSet.getRandom(); // В множестве только 2, поэтом
 -2^31 <= val <= 2^31 - 1
 Не более 2 * 10^5 вызовов методов insert, remove и getRandom.
 При вызове getRandom в структуре данных есть хотя бы один элемент.
-
 */
 
 // RandomizedSet хранит уникальные значения в плотном срезе nums.

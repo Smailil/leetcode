@@ -20,7 +20,6 @@ package main
 Ограничения:
 1 <= nums.length <= 5000
 0 <= nums[i] <= 5000
-
 */
 
 // sortArrayByParity группирует nums: чётные числа идут перед нечётными.

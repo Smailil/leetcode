@@ -33,7 +33,6 @@ https://s3-lc-upload.s3.amazonaws.com/uploads/2018/05/18/domino.png
 n == dominoes.length
 1 <= n <= 10^5
 dominoes[i] имеет значение 'L', 'R' или '.'.
-
 */
 
 // pushDominoes возвращает состояние домино после распространения толчков.

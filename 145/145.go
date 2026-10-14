@@ -1,8 +1,8 @@
 package main
 
 /*
-Дано корневое значение бинарного дерева;
-вернуть обход его узлов в постфиксном порядке.
+Дан корень root двоичного дерева.
+Верните значения его узлов в постфиксном порядке (postorder).
 
 Пример 1:
 Вход: root = [1,null,2,3]
@@ -37,15 +37,23 @@ https://assets.leetcode.com/uploads/2024/08/29/tree_2.png
  *     Right *TreeNode
  * }
  */
+// postorderTraversal собирает значения в порядке левое, правое, корень.
+// Время O(n), n — число узлов; рабочая память O(h) для рекурсии высоты h.
+// Память результата O(n); дерево не изменяется, сохраняются копии значений.
+// В этом файле TreeNode объявлен лишь в комментарии: нужно внешнее определение.
 func postorderTraversal(root *TreeNode) []int {
     res := []int{}
     var postorder func(node *TreeNode)
+    // postorder дописывает поддерево в общий res за O(k), k — число его узлов.
+    // Рабочая память O(h) для стека; добавленная часть результата O(k).
     postorder = func(node *TreeNode) {
+        // Пустое поддерево завершает эту ветку без добавления значений.
         if node == nil {
             return
         }
         postorder(node.Left)
         postorder(node.Right)
+        // Корень добавляется после обоих поддеревьев.
         res = append(res, node.Val)
     }
     postorder(root)

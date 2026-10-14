@@ -37,7 +37,6 @@ parkingSystem.addCar(1); // Вернёт false: место для большог
 0 <= big, medium, small <= 1000
 carType равен 1, 2 или 3.
 Метод addCar будет вызван не более 1000 раз.
-
 */
 
 // ParkingSystem хранит количество ещё свободных мест каждого типа.
@@ -47,14 +46,16 @@ type ParkingSystem struct {
 }
 
 // Constructor задаёт начальное количество свободных мест каждого типа.
-// Время: O(1). Дополнительная память: O(1), поскольку типов всегда три.
+// Время: O(1).
+// Дополнительная память: O(1), поскольку типов всегда три.
 func Constructor(big int, medium int, small int) ParkingSystem {
     return ParkingSystem{spaces: []int{big, medium, small}}
 }
 
 // AddCar пытается занять место нужного типа и сообщает, удалось ли это.
 // Меняет this.spaces: при успехе уменьшает соответствующий счётчик на 1.
-// Время: O(1). Дополнительная память: O(1).
+// Время: O(1).
+// Дополнительная память: O(1).
 func (this *ParkingSystem) AddCar(carType int) bool {
     // По условию carType равен 1, 2 или 3, поэтому carType-1 — индекс 0..2.
     // Constructor создаёт три счётчика; проверяем только нужный тип места.
@@ -63,7 +64,8 @@ func (this *ParkingSystem) AddCar(carType int) bool {
         this.spaces[carType-1]--
         return true
     }
-    // Мест этого типа нет. Другой тип не подходит по условию,
+    // Мест этого типа нет.
+    // Другой тип не подходит по условию,
     // поэтому состояние не меняем и отказываем в парковке.
     return false
 }
